@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+
+  altkom-account-service:
+    depends_on:
+      - altkom-account-postgresql
+    build:
+      context: ./altkom-account-service
+      dockerfile: Dockerfile
+    volumes:
+      - altkom-account-service-pictures-volume:/pictures
+    ports:
+      - '9080:8080'
+    networks:
+      - altkom-network
+
+  altkom-account-postgresql:
+    image: postgres:13
+    volumes:
+      - altkom-account-postgresql-volume:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: altkomaccountdb
+    ports:
+      - '6432:5432'
+    networks:
+      - altkom-network
+
+  altkom-training-postgresql:
+    image: postgres:13
+    volumes:
+      - altkom-training-postgresql-volume:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: altkomtrainingdb
+    ports:
+      - '6433:5432'
+    networks:
+      - altkom-network
+
+volumes:
+  altkom-account-postgresql-volume:
+  altkom-training-postgresql-volume:
+  altkom-account-service-pictures-volume:
+
+networks:
+  altkom-network:

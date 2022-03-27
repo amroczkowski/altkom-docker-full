@@ -1,6 +1,8 @@
 # Compiled class file
 *.class
 
+repo/
+
 # Log file
 *.log
 

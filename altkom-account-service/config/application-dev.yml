@@ -1,0 +1,49 @@
+server:
+  minThreads: 50
+  maxThreads: 500
+
+spring:
+  application:
+    name: account
+  jmx:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://altkom-account-postgresql:5432/altkomaccountdb
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        cache:
+          region:
+            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+          use_second_level_cache: true
+        generate_statistics: true
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_versioned_data: true
+          batch_size: 20
+        temp.use_jdbc_metadata_defaults: false
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    show-sql: true
+  flyway:
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        loggerLevel: full
+        readTimeout: 10000
+
+paths:
+  pictures: /pictures
+
+pl:
+  altkom:
+    training:
+      url: http://altkom-training-service:8080/
