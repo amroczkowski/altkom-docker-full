@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: altkom-account-postgresql-deployment
+  labels:
+    app: altkom-account-postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: altkom-account-postgresql
+  template:
+    metadata:
+      labels:
+        app: altkom-account-postgresql
+    spec:
+      containers:
+      - name: altkom-account-postgresql
+        image: postgres:13
+        ports:
+          - containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: altkom-account-postgresql-secret
+                key: postgres-username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: altkom-account-postgresql-secret
+                key: postgres-password
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: altkom-account-configmap
+                key: postgres-db-name
+                
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: altkom-account-postgresql
+spec:
+  selector:
+    app: altkom-account-postgresql
+  ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432

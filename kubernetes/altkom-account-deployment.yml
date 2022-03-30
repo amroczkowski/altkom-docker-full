@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: altkom-account-deployment
+  labels:
+    app: altkom-account
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: altkom-account
+  template:
+    metadata:
+      labels:
+        app: altkom-account
+    spec:
+      containers:
+      - name: altkom-account
+        image: altkom-account-service
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
